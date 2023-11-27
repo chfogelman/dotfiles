@@ -1,36 +1,15 @@
 
 " CHF's vimrc
-" Plugins ---------- {{{
-if empty(glob("~/.vim/autoload/plug.vim")) " Load vim-plug if it doesn't yet exist
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.github.com/junegunn/vim-plug/master/plug.vim
-    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-call plug#begin('~/.vim/bundle')
-
-Plug 'lifepillar/vim-solarized8'
-Plug 'scrooloose/nerdtree'
-Plug '/usr/local/opt/fzf'
-Plug 'junegunn/fzf.vim'
-Plug 'craigemery/vim-autotag'
-
-call plug#end()
-" Be sure to :PlugInstall
-let NERDTreeShowHidden=1
-let NERDTreeShowLineNumbers=1
-let NERDTreeQuitOnOpen=3
-
-" }}}
 
 " Essential QOL ----- {{{
-
 set number
 set rnu
 set nocompatible
 set showcmd
 filetype plugin indent on
 syntax enable
-color solarized8_high
+set termguicolors
+color solarized8
 set hlsearch
 nohlsearch
 set incsearch
@@ -40,7 +19,6 @@ endif
 set ignorecase
 set smartcase
 set noswapfile
-setglobal so=8
 set belloff=all
 set hidden
 set autoread
@@ -50,6 +28,8 @@ setglobal foldmethod=marker
 set foldminlines=3
 nnoremap S <nop>
 set foldlevelstart=20
+set textwidth=99
+setglobal formatoptions=cqajlr
 
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
     let &g:listchars = "tab:\u25c0 \u25b6,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
@@ -78,6 +58,20 @@ else
     let &t_EI = "\<Esc>[2 q"
 endif
 
+" Persistent undo
+if has('nvim')
+    if !isdirectory("/tmp/nvim")
+        call mkdir("/tmp/nvim", "", 0700)
+    endif
+    set undodir=/tmp/nvim
+else
+    if !isdirectory("/tmp/vim")
+        call mkdir("/tmp/vim", "", 0700)
+    endif
+    set undodir=/tmp/vim
+endif
+set undofile
+setglobal scrolloff=8
 
 " }}}
 
@@ -119,6 +113,8 @@ vnoremap x "_d
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 vnoremap <leader>y "+y
+vnoremap > >gv
+vnoremap < <gv
 
 " }}}
 
@@ -136,13 +132,8 @@ endif
 
 nnoremap <leader><leader> <C-^>
 nnoremap <leader>t :!
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <leader>ff :Files<CR>
-nnoremap <leader>fg :GFiles<CR>
-nnoremap <leader>fl :Lines<CR>
-nnoremap <leader>v :call SplitIfOneWin($MYVIMRC)<CR>
+nnoremap <leader>n :Explore!<CR>
 nnoremap <leader>w <C-w>
-nnoremap <silent> <leader>wm :call WinMaximize()<CR>
 
 " }}}
 
@@ -163,32 +154,11 @@ set laststatus=2
 
 " Functions ==== {{{
 
-function! SwapBG()
-    if &background ==# "dark"
-        set background=light
-    elseif &background ==# "light"
-        set background=dark
-    endif
-endfunction
-
-function! SwapSO()
-    if &so > 100
-        setlocal so=3
-    elseif &so < 100
-        setlocal so=999
-    endif
-endfunction
-
 function! GetModMarker()
     if &modifiable
         return &mod?s:modstr:s:umodstr
     else
         return ""
-endfunction
-
-function! WinMaximize()
-    resize
-    vertical resize
 endfunction
 
 function! SetStatusLine()
@@ -215,21 +185,10 @@ function! SetStatusLine()
     setlocal statusline+=\ %3p%%\ [%l:%v/%L]
 endfunction
 
-
-function! SplitIfOneWin(buffer)
-    if winnr("$") == 1
-        execute "vertical split " . a:buffer
-    else
-        execute "edit " . a:buffer
-    endif
-endfunction
-
 " }}}
 
 " Commands ----- {{{
 
-command! SwapSO :silent call SwapSO()
-command! SwapBG :silent call SwapBG()
 command! CD execute "cd " . expand("%:p:h")
 
 " }}}
@@ -239,7 +198,7 @@ if has('autocmd')
     augroup myvimrc
         autocmd!
         " Source vimrc on save
-        autocmd bufwritepost vimrc source $MYVIMRC
+        autocmd bufwritepost vimrc source %:p
         " Reset statusline when switching buffers or working directory
         autocmd BufEnter * call SetStatusLine()
         if exists('##DirChanged')
@@ -248,8 +207,8 @@ if has('autocmd')
         "set filetype-specific modifications
         autocmd Filetype python setlocal foldmethod=indent
         autocmd FileType make setlocal list tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
-        autocmd FileType plaintex set ft=tex
-        autocmd FileType tex nnoremap \lm <silent> :botright terminal latexmk %<cr><C-w>k | nnoremap \lc :!latexmk -c %<cr>
+        autocmd FileType plaintex setlocal ft=tex
+        autocmd FileType text,markdown setlocal formatoptions=taln1
         "set cursorline local to window
         autocmd BufWInEnter,WinEnter * setlocal cursorline
         autocmd WinLeave * setlocal nocursorline

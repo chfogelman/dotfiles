@@ -20,12 +20,10 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     'neovim/nvim-lspconfig',
-    {
-    'nvim-telescope/telescope.nvim', branch = '0.1.x',
+    { 'nvim-telescope/telescope.nvim', branch = '0.1.x',
       dependencies = { 'nvim-lua/plenary.nvim' }
     },
-    {
-        "nvim-neo-tree/neo-tree.nvim",
+    { "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
         dependencies = {
             "nvim-lua/plenary.nvim",
