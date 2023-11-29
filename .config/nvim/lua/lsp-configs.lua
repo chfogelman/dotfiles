@@ -7,17 +7,47 @@ lspconfig.rust_analyzer.setup {
         ['rust-analyzer'] = {},
     },
 }
-lspconfig.lua_ls.setup {}
+lspconfig.lua_ls.setup {
+    on_init = function(client)
+        local path = client.workspace_folders[1].name
+        if not vim.loop.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
+            client.config.settings = vim.tbl_deep_extend('force', client.config.settings, {
+                Lua = {
+                    runtime = {
+                        version = 'LuaJIT'
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                        library = {
+                            vim.env.VIMRUNTIME
+                            -- "${3rd}/luv/library"
+                            -- "${3rd}/busted/library",
+                        }
+                        -- or pull in all of 'runtimepath'. NOTE: this is a lot slower
+                        -- library = vim.api.nvim_get_runtime_file("", true)
+                    }
+                }
+            })
+            client.notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+        end
+        return true
+    end
+}
 lspconfig.clangd.setup {}
 
 
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<leader>eo', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>ei', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>ep', vim.diagnostic.goto_prev)
 vim.keymap.set('n', '<leader>en', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>el', vim.diagnostic.setqflist)
+vim.keymap.set('n', '<leader>ee', function()
+    vim.diagnostic.setqflist {
+        severity = vim.diagnostic.severity.ERROR,
+    }
+end)
+vim.keymap.set('n', '<leader>ea', vim.diagnostic.setqflist)
 vim.keymap.set('n', '<leader>eb', vim.diagnostic.setloclist)
 
 local lsp_group = vim.api.nvim_create_augroup('UserLspConfig', {})
@@ -59,6 +89,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
         vim.keymap.set('n', 'gC', vim.lsp.buf.outgoing_calls, opts)
         vim.keymap.set('n', 'gc', vim.lsp.buf.incoming_calls, opts)
+        vim.keymap.set('n', 'gh', "<cmd>ClangdSwitchSourceHeader<CR>", opts)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
         vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)

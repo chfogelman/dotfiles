@@ -1,10 +1,9 @@
 # Migration:
 
 ```bash
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' \
-echo ".dotfiles" >> .gitignore \
+alias cfg='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME' \
 git clone --bare git@github.com:chfogelman/dotfiles.git $HOME/.dotfiles \
-config config --local status.showUntrackedFiles no
+cfg config --local status.showUntrackedFiles no
 ```
 
 ## Back up files:
