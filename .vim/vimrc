@@ -19,17 +19,18 @@ endif
 set ignorecase
 set smartcase
 set noswapfile
+set updatetime=500
 set belloff=all
 set hidden
 set autoread
 set autowrite
 let mapleader=" "
-setglobal foldmethod=marker
+setglobal foldmethod=syntax
 set foldminlines=3
 nnoremap S <nop>
 set foldlevelstart=20
 set textwidth=99
-setglobal formatoptions=cqajlr
+setglobal formatoptions=cqjlr
 
 if (&termencoding ==# 'utf-8' || &encoding ==# 'utf-8') && v:version >= 700
     let &g:listchars = "tab:\u25c0 \u25b6,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u00b7"
@@ -90,11 +91,11 @@ inoremap jj <ESC>
 " }}}
 
 " Normal mode remaps ---- {{{
-nnoremap <down> :resize -2<cr>
-nnoremap <left> :vertical resize -2<cr>
-nnoremap <right> :vertical resize +2<cr>
+nnoremap <silent> <up> :resize +2<cr>
+nnoremap <silent> <down> :resize -2<cr>
+nnoremap <silent> <left> :vertical resize -2<cr>
+nnoremap <silent> <right> :vertical resize +2<cr>
 nnoremap <silent> <leader>h :nohlsearch<cr>
-nnoremap <up> :resize +2<cr>
 nnoremap X "_dd
 nnoremap Y y$
 nnoremap <leader>y "+y
@@ -104,6 +105,11 @@ nnoremap gP P`[v`]
 nnoremap j gj
 nnoremap k gk
 nnoremap x "_x
+
+nnoremap <silent> <leader>co :copen<CR>
+nnoremap <silent> <leader>cc :cclose<CR>
+nnoremap <silent> <C-n> :cnext<CR>
+nnoremap <silent> <C-p> :cprevious<CR>
 " }}}
 
 " Visual remaps remaps ---- {{{
@@ -118,20 +124,11 @@ vnoremap < <gv
 
 " }}}
 
-" Terminal mode mappings ---- {{{
-if has('nvim')
-    tnoremap <Esc> <C-\><C-n>
-elseif v:version > 800
-    tnoremap <Esc> <C-w>N
-endif
-" }}}
-
 " }}}
 
 " Global remaps using leader ----{{{
 
 nnoremap <leader><leader> <C-^>
-nnoremap <leader>t :!
 nnoremap <leader>n :Explore!<CR>
 nnoremap <leader>w <C-w>
 
