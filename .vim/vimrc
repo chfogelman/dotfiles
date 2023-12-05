@@ -26,9 +26,11 @@ set autoread
 set autowrite
 let mapleader=" "
 setglobal foldmethod=syntax
-set foldminlines=3
-nnoremap S <nop>
-set foldlevelstart=20
+set foldminlines=1
+set foldnestmax=2
+set foldlevelstart=1
+nnoremap S z
+nnoremap s z
 set textwidth=99
 setglobal formatoptions=cqjlr
 
@@ -194,8 +196,6 @@ command! CD execute "cd " . expand("%:p:h")
 if has('autocmd')
     augroup myvimrc
         autocmd!
-        " Source vimrc on save
-        autocmd bufwritepost vimrc source %:p
         " Reset statusline when switching buffers or working directory
         autocmd BufEnter * call SetStatusLine()
         if exists('##DirChanged')
@@ -205,7 +205,8 @@ if has('autocmd')
         autocmd Filetype python setlocal foldmethod=indent
         autocmd FileType make setlocal list tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
         autocmd FileType plaintex setlocal ft=tex
-        autocmd FileType text,markdown setlocal formatoptions=taln1
+        autocmd FileType text,markdown setlocal formatoptions=tln1
+        autocmd FileType vim setlocal foldmethod=marker
         "set cursorline local to window
         autocmd BufWInEnter,WinEnter * setlocal cursorline
         autocmd WinLeave * setlocal nocursorline
