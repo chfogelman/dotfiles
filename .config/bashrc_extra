@@ -1,7 +1,14 @@
+# Enable config tracking
 alias cfg="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
+# Set up cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
+# Set up fzf history
 eval "$(fzf --bash)"
 
+# Run nvim by default if available
 [ -x "$(command -v nvim)" ] && alias vim="$(which nvim)"
+
+# Enable recursive globs
+shopt -s globstar

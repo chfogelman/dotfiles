@@ -26,9 +26,9 @@ set autoread
 set autowrite
 let mapleader=" "
 setglobal foldmethod=syntax
-set foldminlines=1
+set foldminlines=2
 set foldnestmax=2
-set foldlevelstart=1
+set foldlevelstart=99
 nnoremap S z
 nnoremap s z
 set textwidth=99

@@ -70,13 +70,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
         -- Enable completion triggered by <c-x><c-o>
         vim.bo[event.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-        vim.api.nvim_create_autocmd('BufWritePre', {
-            group = lsp_group,
-            buffer = event.buf,
-            callback = function(ev)
-                vim.lsp.buf.format()
-            end,
-        })
+--        vim.api.nvim_create_autocmd('BufWritePre', {
+--            group = lsp_group,
+--            buffer = event.buf,
+--            callback = function(ev)
+--                vim.lsp.buf.format()
+--            end,
+--        })
         vim.api.nvim_create_autocmd('CursorHold', {
             group = lsp_group,
             buffer = event.buf,
