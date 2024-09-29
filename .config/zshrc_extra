@@ -1,6 +1,8 @@
+#!/usr/bin/env zsh
+
 alias cfg="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
-eval "$(fzf --zsh)"
+source <(fzf --zsh)
 
 [ -x "$(command -v nvim)" ] && alias vim="$(which nvim)"
 

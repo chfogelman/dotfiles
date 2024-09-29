@@ -1,20 +1,19 @@
+#!/bin/bash
+
 # Enable config tracking
 alias cfg="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 # Set prompt
-function __ps1_newline_login {
-  PS1_PRE="\u@\h:\$(pwd)/"
+function __ps1_newline {
+  PS1_PRE="$USER@$HOSTNAME:$PWD/"
   PS1_POST="[\$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')\$((git rev-parse >/dev/null 2>&1 || ( ! (echo -n '-'))) && ( (! (git diff --quiet 2>/dev/null || echo -n '*')) || (git diff-index --quiet --cached HEAD -- 2>/dev/null || echo -n '+')))] $ "
-  if [[ $(tput cols) -lt 100 ]]; then
+  if [[ $(($COLUMNS - ${#PS1_PRE})) -lt 40 ]]; then
     export PS1="$PS1_PRE\n> $PS1_POST"
   else
     export PS1="$PS1_PRE $PS1_POST"
   fi
 }
-
-PROMPT_COMMAND='__ps1_newline_login'
-
-#export PS1="\u@\h:\$(pwd)/\$(if [ \$(tput cols) -lt \"100\" ]; then printf '\\n' ; else printf ' ' ; fi;)[\$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')\$(git diff-index --quiet --cached HEAD -- 2>/dev/null || echo '*')] $ "
+PROMPT_COMMAND='__ps1_newline'
 
 # Set up cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
@@ -23,7 +22,17 @@ PROMPT_COMMAND='__ps1_newline_login'
 eval "$(fzf --bash)"
 
 # Run nvim by default if available
-[ -x "$(command -v nvim)" ] && alias vim="$(which nvim)"
+[ -x "$(command -v nvim)" ] && alias vim="$(which nvim)" && alias vvim="$(which vim)"
 
 # Enable recursive globs
 shopt -s globstar
+shopt -s cdspell
+shopt -s dirspell
+
+# Aliases
+alias lsp="/usr/bin/env ls" # for piping
+alias ls="ls -xXgF"
+alias ll="ls -lth"
+alias la="ls -A"
+alias lla="ll -A"
+alias lg="find ./ |& grep"
