@@ -17,7 +17,7 @@ xargs -I{} mv {} .config-backup/{}
 ## Check out configuration:
 
 ```bash
-config checkout && \
+cfg checkout && \
 echo "[ -f ~/.config/bashrc_extra ] && source ~/.config/bashrc_extra" >> .bashrc && \
 echo "[ -f ~/.config/zshrc_extra ] && source ~/.config/zshrc_extra" >> .zshrc
 ```
