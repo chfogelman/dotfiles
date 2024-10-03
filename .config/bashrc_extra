@@ -30,9 +30,9 @@ shopt -s cdspell
 shopt -s dirspell
 
 # Aliases
-alias lsp="/usr/bin/env ls" # for piping
-alias ls="ls -xXgF"
-alias ll="ls -lth"
-alias la="ls -A"
+alias lsp="/usr/bin/env ls" # for piping and nonrecursive expansion
+alias ls="lsp -F"
+alias ll="lsp -lthxXg"
+alias la="lsp -A"
 alias lla="ll -A"
 alias lg="find ./ |& grep"
