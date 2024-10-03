@@ -1,9 +1,17 @@
 -- Set up language servers.
 local lspconfig = require('lspconfig')
+local ra_cmds = require('analyzer-commands')
+
+lspconfig.util.on_setup = lspconfig.util.add_hook_before(lspconfig.util.on_setup,
+    function(config)
+        if config.name == "rust-analyzer" then
+            config.capabilities.experimental['localDocs'] = true
+        end
+    end
+)
+
 lspconfig.pyright.setup {}
 
-lspconfig.rust_analyzer.document_config.default_config.capabilities.experimental['localDocs'] = true
-lspconfig.rust_analyzer.document_config.default_config.capabilities['additionalTextEdits'] = true
 lspconfig.rust_analyzer.setup {
     -- Server-specific settings. See `:help lspconfig-setup`
     cmd = { 'rust-analyzer', '+nightly' },
@@ -12,12 +20,16 @@ lspconfig.rust_analyzer.setup {
             rustfmt = {
                 extraArgs = { '+nightly' },
             },
-            check = {
-                command = "clippy",
-            },
         },
     },
+    on_attach = function(_client, bufnr)
+        vim.api.nvim_buf_create_user_command(bufnr, 'JoinLines', ra_cmds.join_lines, { range = true })
+        vim.keymap.set({ 'n', 'v' }, 'J', '<cmd>JoinLines<CR>', { buffer = bufnr })
+        vim.api.nvim_create_user_command('FindParentModule', ra_cmds.find_parent_module, {})
+        vim.keymap.set('n', '%', ra_cmds.find_matching_brace, { buffer = bufnr })
+    end,
 }
+
 lspconfig.lua_ls.setup {
     on_init = function(client)
         local path = client.workspace_folders[1].name
@@ -44,6 +56,7 @@ lspconfig.lua_ls.setup {
         return true
     end
 }
+
 lspconfig.clangd.setup {}
 
 
@@ -111,6 +124,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('i', '<C-n>', '<C-x><C-o>', opts)
         vim.keymap.set('i', '<CR>', function() return vim.fn.pumvisible() == 1 and "<C-y>" or "<CR>" end,
             { buffer = event.buf, expr = true })
+    end,
+})
+
+vim.api.nvim_create_autocmd('LspTokenUpdate', {
+    group = lsp_group,
+    callback = function(args)
+        vim.lsp.semantic_tokens.highlight_token(
+            args.data.token,
+            args.buf,
+            args.data.client_id,
+            'MyMutableVariableHighlight'
+        )
     end,
 })
 

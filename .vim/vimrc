@@ -121,6 +121,7 @@ vnoremap x "_d
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
 vnoremap <leader>y "+y
+vnoremap <C-V> "+y
 vnoremap > >gv
 vnoremap < <gv
 
