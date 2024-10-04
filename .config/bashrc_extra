@@ -22,7 +22,7 @@ PROMPT_COMMAND='__ps1_newline'
 eval "$(fzf --bash)"
 
 # Run nvim by default if available
-[ -x "$(command -v nvim)" ] && alias vim="$(which nvim)" && alias vvim="$(which vim)"
+[ -x "$(command -v nvim)" ] && alias vim="$(which nvim)" && alias vimdiff="nvim -d"
 
 # Enable recursive globs
 shopt -s globstar
