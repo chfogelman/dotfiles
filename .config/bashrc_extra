@@ -4,7 +4,10 @@
 alias cfg="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
 
 # Set prompt
-function __ps1_newline {
+shopt -s histappend
+function __prompt_command {
+  history -a
+  history -n
   PS1_PRE="$USER@$HOSTNAME:$PWD/"
   PS1_POST="[\$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')\$((git rev-parse >/dev/null 2>&1 || ( ! (echo -n '-'))) && ( (! (git diff --quiet 2>/dev/null || echo -n '*')) || (git diff-index --quiet --cached HEAD -- 2>/dev/null || echo -n '+')))] $ "
   if [[ $(($COLUMNS - ${#PS1_PRE})) -lt 40 ]]; then
@@ -13,7 +16,7 @@ function __ps1_newline {
     export PS1="$PS1_PRE $PS1_POST"
   fi
 }
-PROMPT_COMMAND='__ps1_newline'
+PROMPT_COMMAND='__prompt_command'
 
 # Set up cargo
 [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
@@ -22,10 +25,17 @@ PROMPT_COMMAND='__ps1_newline'
 eval "$(fzf --bash)"
 
 # Run nvim by default if available
-[ -x "$(command -v nvim)" ] && alias vim="$(which nvim)" && alias vimdiff="nvim -d"
+if [ -x "$(command -v nvim)" ]; then
+    alias vim="$(which nvim)"
+    alias vimdiff="nvim -d"
+    export VISUAL="$(which nvim)"
+    export EDITOR=$VISUAL
+fi
 
 # Enable recursive globs
 shopt -s globstar
+
+# Enable spellcheck
 shopt -s cdspell
 shopt -s dirspell
 
