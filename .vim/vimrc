@@ -82,7 +82,6 @@ setglobal scrolloff=8
 
 " Command mode remaps ---- {{{
 cabbrev vb vert sb
-cabbrev sh !
 cnoremap : <up>
 cnoremap ; <down>
 " }}}

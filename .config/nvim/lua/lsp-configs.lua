@@ -14,17 +14,17 @@ lspconfig.pyright.setup {}
 
 lspconfig.rust_analyzer.setup {
     -- Server-specific settings. See `:help lspconfig-setup`
-    cmd = { 'rust-analyzer', '+nightly' },
+    cmd = { 'rust-analyzer' },
     settings = {
         ['rust-analyzer'] = {
             rustfmt = {
-                extraArgs = { '+nightly' },
+                extraArgs = { },
             },
         },
     },
     on_attach = function(_client, bufnr)
         vim.api.nvim_buf_create_user_command(bufnr, 'JoinLines', ra_cmds.join_lines, { range = true })
-        vim.keymap.set({ 'n', 'v' }, 'J', '<cmd>JoinLines<CR>', { buffer = bufnr })
+        --vim.keymap.set({ 'n', 'v' }, 'J', '<cmd>JoinLines<CR>', { buffer = bufnr })
         vim.api.nvim_create_user_command('FindParentModule', ra_cmds.find_parent_module, {})
         vim.keymap.set('n', '%', ra_cmds.find_matching_brace, { buffer = bufnr })
     end,
@@ -51,7 +51,7 @@ lspconfig.lua_ls.setup {
 
 lspconfig.clangd.setup {}
 
-
+lspconfig.jdtls.setup {}
 
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -109,8 +109,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<leader>gh', "<cmd>ClangdSwitchSourceHeader<CR>", opts)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
-        vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
         vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
         vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
         vim.keymap.set('i', '<C-n>', '<C-x><C-o>', opts)

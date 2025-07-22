@@ -70,15 +70,15 @@ function M.join_lines(args)
             textDocument = { uri = vim.uri_from_bufnr(0) },
             ranges = { range }
         }
-        client.request('experimental/joinLines', params, function(err, result)
-            if err then
-                error(tostring(err))
-            end
-            if result then
-                vim.lsp.util.apply_text_edits(result, 0, client.offset_encoding)
-                return
-            end
-        end, 0)
+        -- client.request('experimental/joinLines', params, function(err, result, ctx)
+        --     if err then
+        --         error(tostring(err))
+        --     end
+        --     if result then
+        --         vim.lsp.util.apply_text_edits(result, 0, client.offset_encoding)
+        --         return
+        --     end
+        -- end, 0)
     else
         error("This server does not support the JoinLines command")
     end

@@ -2,14 +2,13 @@
 
 # Enable config tracking
 alias cfg="/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
-
 # Set prompt
+GIT_PS1_SHOWDIRTYSTATE=yes
 shopt -s histappend
 function __prompt_command {
   history -a
-  history -n
   PS1_PRE="$USER@$HOSTNAME:$PWD/"
-  PS1_POST="[\$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')\$((git rev-parse >/dev/null 2>&1 || ( ! (echo -n '-'))) && ( (! (git diff --quiet 2>/dev/null || echo -n '*')) || (git diff-index --quiet --cached HEAD -- 2>/dev/null || echo -n '+')))] $ "
+  PS1_POST="$(__git_ps1 "[%s] ")\$ "
   if [[ $(($COLUMNS - ${#PS1_PRE})) -lt 40 ]]; then
     export PS1="$PS1_PRE\n> $PS1_POST"
   else

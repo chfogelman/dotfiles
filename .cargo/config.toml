@@ -1,4 +1,3 @@
 [alias]
 
 [build]
-target-dir = "/tmp/cargo"
