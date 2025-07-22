@@ -1,0 +1,59 @@
+
+InlayHints:
+  Enabled: Yes
+
+Completion:
+  AllScopes: Yes
+
+#Index:
+#  Background: Skip
+
+CompileFlags:
+  Add:
+    - -Wall
+    - -Wextra
+    - -Wpedantic
+    - -Wpadded
+    - -Wunused
+    - -Wno-unused-parameter
+    - -Wswitch-enum
+    - -Woverloaded-virtual
+    - -Wshadow
+    - -Wself-assign
+    - -Wself-move
+    - -Wweak-vtables
+    - -Wunneeded-member-function
+    - -Wmove
+    - -Wnon-virtual-dtor
+  
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: None
+  ClangTidy:
+    FastCheckFilter: Strict
+    Add:
+      - '*'
+    Remove:
+      - 'modernize-use-trailing-return-type'
+      - 'llvm*'
+      - 'boost-*'
+      - 'fuchsia-*'
+      - 'readability-identifier-length'
+      - 'readability-redundant-string-init'
+      - '*-named-parameter'
+      - 'altera-*'
+      - 'zircon-*'
+      - 'android-*'
+      - 'objc-*'
+      - 'misc-non-private-member-variables-in-classes'
+      - '*-uppercase-literal-suffix'
+      - '*-magic-numbers'
+      - '*-non-private-member-variables-in-classes'
+      - readability-math-missing-parentheses
+      - readability-redundant-member-init
+      - '*-else-after-return'
+      - 'google-build-using-namespace'
+      - 'cppcoreguidelines-pro-bounds-constant-array-index'
+    CheckOptions:
+      readability-implicit-bool-conversion.AllowPointerCondition: true
